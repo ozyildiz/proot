@@ -1,13 +1,24 @@
-# This script extracts segments of a sound file with given labels.
+## The intention of this script is to take big sound files (say, a full elicitation session) and extract
+## specific segments from them (say, all items in one experimental condition).
+## The big sound files should be loaded up in praat, but not necessarily selected. 
+## They need to be coupled with a textgrid, that minimally has one label tier that identifies the 
+## segments to be extracted.
 
+## This is where the user sets up some initial parameters.
 form 
+	## Setting the directory where the extracted files are saved.
 	comment Where do you want to save the extracted files?
 	text folder /home/zined/Desktop/wavs/gp-two-exp1/ootb-attitudes
 
+	## Should only partial wav files be saved, or should the corresponding textgrids be saved along
+	## with them? By default, only wavs.
 	comment Check whether you want to save sound files and/or corresponding textgrids:
 	boolean save_Wav 1
 	boolean save_Textgrid
 
+	## There should be a tier in the textgrid associated with each big sound file that specifies the labels
+	## of the segments to be extracted. The tier number should be the same across textgrids.
+	## That number is specified here.
 	comment Which tier includes the labels to extract
 	positive labeltier 1
 endform
