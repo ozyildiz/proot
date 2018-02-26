@@ -23,7 +23,19 @@ form
 	positive labeltier 1
 endform
 
+## Specifying the names of the files
+## My filenames are in the format date-subjectid-experimentname 
+## And I'll want to loop over multiple files, though this isn't necessary.
+## So I specify those variables individually.
+
+## Here, I fix the experiment name:
 experiment$="exp1a"
+
+## The subject name and the date change, because I've elicited stuff from different people on
+## different days.
+
+## I define a variable k, that will be fixed to a subject name and date. This information will be used to
+## define a filename. But, you can do things otherways.
 for k from 1 to 2
 	if k=1
 		subject$="mtk"
@@ -34,13 +46,13 @@ for k from 1 to 2
 		date$="20170122"
 	endif
 
+	filename$=date$+"-"+subject$+"-"+experiment$
+	selectObject: "TextGrid 'filename$'"
+
 	searchKey1$="nargile"
 	searchKey2$="zelzele"
 	searchKey3$="9-"
 	searchKey4$="10-"
-
-	filename$=date$+"-"+subject$+"-"+experiment$
-	selectObject: "TextGrid 'filename$'"
 
 	# Gets the number intervals in current sound file
 	numberOfIntervals=Get number of intervals... labeltier
