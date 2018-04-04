@@ -8,19 +8,19 @@
 form 
 	## Setting the directory where the extracted files are saved.
 	comment Where do you want to save the extracted files?
-	text folder /home/zined/Desktop/wavs/gp-two-exp1/ootb-attitudes
+	text folder //Users/linguistics/Desktop/denizs-stuff/wavs/gp-two-exp2/20170316-de/regular-focus/tokens
 
 	## Should only partial wav files be saved, or should the corresponding textgrids be saved along
 	## with them? By default, only wavs.
 	comment Check whether you want to save sound files and/or corresponding textgrids:
 	boolean save_Wav 1
-	boolean save_Textgrid
+	boolean save_Textgrid 1
 
 	## There should be a tier in the textgrid associated with each big sound file that specifies the labels
 	## of the segments to be extracted. The tier number should be the same across textgrids.
 	## That number is specified here.
 	comment Which tier includes the labels to extract
-	positive labeltier 1
+	positive labeltier 2
 endform
 
 ## Specifying the names of the files
@@ -29,17 +29,17 @@ endform
 ## So I specify those variables individually.
 
 ## Here, I fix the experiment name:
-experiment$="exp1a"
+experiment$="regular-focus"
 
 ## The subject name and the date change, because I've elicited stuff from different people on
 ## different days.
 
 ## I define a variable k, that will be fixed to a subject name and date. This information will be used to
 ## define a filename. But, you can do things otherways.
-for k from 1 to 2
+for k from 1 to 1
 	if k=1
-		subject$="mtk"
-		date$="20170120"
+		subject$="de"
+		date$="20170316"
 	endif
 	if k=2
 		subject$="ikb"
@@ -49,10 +49,13 @@ for k from 1 to 2
 	filename$=date$+"-"+subject$+"-"+experiment$
 	selectObject: "TextGrid 'filename$'"
 
-	searchKey1$="nargile"
-	searchKey2$="zelzele"
-	searchKey3$="9-"
-	searchKey4$="10-"
+	# Place in this list a substring of the labels that you want to extract.
+	# searchKeysn$="label"
+	# I don't know if there's a function that gets the length of this list. For now, take the number of items, add
+	# it manually to the right edge of the for statement below.
+	searchKeys1$="eregliliyi-prf"
+	searchKeys2$="anamurlular-pmf"
+	searchKeys3$="alanyalilar-vf"
 
 	# Gets the number intervals in current sound file
 	numberOfIntervals=Get number of intervals... labeltier
@@ -63,30 +66,34 @@ for k from 1 to 2
 		# Gets the label of the current interval number
 		labelName$=Get label of interval... labeltier labelNumber
 
-		if index(labelName$, searchKey1$)>0 or index(labelName$,searchKey2$)>0 or index(labelName$,searchKey3$)>0 or index(labelName$,searchKey4$)>0
-			intervalStart=Get starting point... labeltier labelNumber
-			intervalEnd=Get end point... labeltier labelNumber
-			# appendInfoLine: labelName$, " ", labelNumber, " ", intervalStart, " ", intervalEnd
-			savePath$=folder$ + "/" +labelName$+"-"+subject$
+		# Add the number of search keys here:
+		# for x from 1 to no_search_keys
+		for x from 1 to 3
+			searchKey$="searchKeys"+string$(x)+"$"
+			if index(labelName$, 'searchKey$')>0
+				intervalStart=Get starting point... labeltier labelNumber
+				intervalEnd=Get end point... labeltier labelNumber
+				# appendInfoLine: labelName$, " ", labelNumber, " ", intervalStart, " ", intervalEnd
+				savePath$=folder$ + "/" +labelName$+"-"+subject$
 
-			# This part extracts the textgrid. It's useful if you want to save it as well. Or manipulate it.
-			if save_Textgrid=1
-				Extract part... intervalStart intervalEnd Yes
-				Save as text file... 'savePath$'.TextGrid
-				Remove
-			endif
+				# This part extracts the textgrid. It's useful if you want to save it as well. Or manipulate it.
+				if save_Textgrid=1
+					Extract part... intervalStart intervalEnd No
+					Save as text file... 'savePath$'.TextGrid
+					Remove
+				endif
 
-			# Selects the soundfile and extracts the part corresponding to the label.
-			if save_Wav=1
-				selectObject: "Sound 'filename$'"
-				Extract part... intervalStart intervalEnd rectangular 1 No
-				Write to WAV file... 'savePath$'.wav
-				Remove
-			endif
-		endif
-		
+				# Selects the soundfile and extracts the part corresponding to the label.
+				if save_Wav=1
+					selectObject: "Sound 'filename$'"
+					Extract part... intervalStart intervalEnd rectangular 1 No
+					Write to WAV file... 'savePath$'.wav
+					Remove
+				endif
+			endif		
 		# We need to select the master textgrid back:
 		selectObject: "TextGrid 'filename$'"
+		endfor
 	endfor
 endfor
 
