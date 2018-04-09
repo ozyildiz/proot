@@ -52,10 +52,10 @@ for k from 1 to 1
 	# Place in this list a substring of the labels that you want to extract.
 	# searchKeysn$="label"
 	# I don't know if there's a function that gets the length of this list. For now, take the number of items, add
-	# it manually to the right edge of the for statement below.
-	searchKeys1$="eregliliyi-prf"
-	searchKeys2$="anamurlular-pmf"
-	searchKeys3$="alanyalilar-vf"
+	# it manually to no_search_keys
+	searchKeys1$="sf"
+	searchKeys2$="of"
+	no_search_keys=2
 
 	# Gets the number intervals in current sound file
 	numberOfIntervals=Get number of intervals... labeltier
@@ -66,9 +66,7 @@ for k from 1 to 1
 		# Gets the label of the current interval number
 		labelName$=Get label of interval... labeltier labelNumber
 
-		# Add the number of search keys here:
-		# for x from 1 to no_search_keys
-		for x from 1 to 3
+		for x from 1 to no_search_keys
 			searchKey$="searchKeys"+string$(x)+"$"
 			if index(labelName$, 'searchKey$')>0
 				intervalStart=Get starting point... labeltier labelNumber
